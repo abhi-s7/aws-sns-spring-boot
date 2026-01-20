@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Language" content="en">
+    <title>AWS SNS Manager</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<h1>AWS SNS Topic Manager</h1>
+
+<nav>
+    <a href="/">Topic Management</a>
+    <a href="notify.html">Send Notification</a>
+</nav>
+
+<div class="container">
+    <!-- Section 1: Create Topic -->
+    <div class="section">
+        <h3>Create Topic</h3>
+        <form id="createTopicForm" onsubmit="createTopic(event)">
+            <label for="topicName">Topic Name</label>
+            <input type="text" id="topicName" name="topicName" required placeholder="Enter topic name">
+            <input type="submit" value="Create Topic">
+            <div id="createTopicResult" class="result"></div>
+        </form>
+    </div>
+
+    <!-- Section 2: List Topics -->
+    <div class="section">
+        <h3>List Topics</h3>
+        <button onclick="listTopics()">Refresh Topic List</button>
+        <div id="topicListResult" class="result"></div>
+        <div id="topicList" class="queue-list"></div>
+    </div>
+
+    <!-- Section 3: Subscribe Email -->
+    <div class="section">
+        <h3>Subscribe Email</h3>
+        <form id="subscribeForm" onsubmit="subscribeEmail(event)">
+            <label for="subscribeTopicArn">Topic ARN</label>
+            <input type="text" id="subscribeTopicArn" name="topicArn" required placeholder="Enter topic ARN">
+            
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" required placeholder="Enter email address">
+            
+            <input type="submit" value="Subscribe Email">
+            <div id="subscribeResult" class="result"></div>
+        </form>
+    </div>
+
+    <!-- Section 4: Delete Topic -->
+    <div class="section">
+        <h3>Delete Topic</h3>
+        <form id="deleteTopicForm" onsubmit="deleteTopic(event)">
+            <label for="deleteTopicArn">Topic ARN</label>
+            <input type="text" id="deleteTopicArn" name="topicArn" required placeholder="arn:aws:sns:region:account-id:topic-name">
+            <button type="submit" class="danger">Delete Topic</button>
+            <div id="deleteTopicResult" class="result"></div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>

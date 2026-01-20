@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: aws-sns-spring-boot
+  web:
+    resources:
+      static-locations: classpath:/static/
+
+server:
+  port: 8081
+
+aws:
+  sns:
+    region: ${AWS_SNS_REGION:us-west-1}
+    access-key: ${AWS_SNS_ACCESS_KEY:}
+    secret-key: ${AWS_SNS_SECRET_KEY:}

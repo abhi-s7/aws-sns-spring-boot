@@ -1,0 +1,45 @@
+#!/bin/bash
+# Update these with your EC2 details
+EC2_HOST="your-ec2-ip"
+KEY_FILE="your-key.pem"
+
+# Build JAR
+./mvnw clean package -DskipTests
+
+# Upload JAR
+scp -i "$KEY_FILE" target/*.jar ec2-user@$EC2_HOST:/home/ec2-user/
+
+# Setup on EC2
+ssh -i "$KEY_FILE" ec2-user@$EC2_HOST << 'EOF'
+# Install Java (if not already installed)
+sudo yum install java-21-amazon-corretto -y 2>/dev/null || echo "Java already installed"
+
+# Create service
+sudo bash -c 'cat > /etc/systemd/system/sns-app.service << SERVICE
+[Unit]
+Description=AWS SNS Spring Boot App
+After=network.target
+
+[Service]
+User=ec2-user
+WorkingDirectory=/home/ec2-user
+ExecStart=/usr/bin/java -jar aws-sns-spring-boot-1.0.0-SNAPSHOT.jar
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+SERVICE'
+
+# Start service
+sudo systemctl daemon-reload
+sudo systemctl enable sns-app
+sudo systemctl start sns-app
+EOF
+
+echo "Done! Access at http://$EC2_HOST:8081"
+echo ""
+echo "Manage service with:"
+echo "  sudo systemctl stop sns-app     # Stop"
+echo "  sudo systemctl start sns-app    # Start"
+echo "  sudo systemctl restart sns-app  # Restart"
+echo "  sudo systemctl status sns-app   # Status"
